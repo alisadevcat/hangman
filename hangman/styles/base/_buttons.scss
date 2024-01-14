@@ -1,0 +1,26 @@
+@use './colors' as *;
+
+.btn{
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 150%;
+    text-align: center;
+}
+.btn-primary{
+    padding: 20px;
+    background-color: $color-secondary;
+    border-radius: 100px;
+    color: $color-primary;
+}
+.btn-modal-types{
+padding: 8px 6px 8px 8px;
+}
+
+.btn-modal-close{
+    padding: 8px 78px;
+    width:100%;
+    border-radius: 100px;
+    background-color: $color-secondary;
+    border:1px solid $color-light-border;
+}
