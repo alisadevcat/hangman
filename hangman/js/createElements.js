@@ -62,6 +62,7 @@ function createKeyBoard() {
   alphabet.forEach((item) => {
     const key = document.createElement("div");
     key.classList.add("btn");
+    key.dataset.key = item;
     key.innerHTML = item;
     div.appendChild(key);
   });
@@ -104,11 +105,11 @@ function createGuessTopPart(
 
   const guessesLeft = document.createElement("span");
   guessesLeft.classList.add("incorrect-guesses__left");
-  guessesLeft.innerHTML = "1";
+  guessesLeft.innerHTML = "1 ";
 
   const guessesTotal = document.createElement("span");
   guessesTotal.classList.add("incorrect-guesses__total");
-  guessesTotal.innerHTML = "6";
+  guessesTotal.innerHTML = " 6";
 
 
   hint.appendChild(hintDiv);
