@@ -17,10 +17,13 @@ body {
 }
 
 .container {
-  max-width: 90rem;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 40px;
 
+  @include lg {
+    max-width: 61rem;
+  }
   @include md {
     max-width: 48rem;
   }

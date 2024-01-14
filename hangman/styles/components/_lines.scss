@@ -1,10 +1,10 @@
 .lines{
   // padding: 0 2px;
-  width: 400px;
+  max-width: 400px;
   position: relative; 
 }
 .top-line {
-    width: 350px;
+    max-width: 350px;
     border-top: 21px solid black;
     position:relative;
   }
@@ -12,12 +12,12 @@
 .horizontal-line{
   border-left: 21px solid black;
   height: 586px;
-  width: 6px;
+  max-width: 6px;
   position:relative;
 }
 
 .diagnol-line{
-  width: 140px;
+  max-width: 140px;
   position: absolute;
   overflow: hidden;
   top: 0;
@@ -29,14 +29,14 @@
 .small-line{
   border-left: 11px solid black;
   height: 100px;
-  width: 3px;
+  max-width: 3px;
   position: absolute;
   overflow: hidden;
   top: 0;
   left: 85%;
 }
 .bottom-line{
-  width: 100%;
+  max-width: 100%;
   border-top: 2px solid black;
 }
 .game-title{

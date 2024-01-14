@@ -1,0 +1,32 @@
+.guesses-container{
+    display: flex;
+    flex-flow: column nowrap;
+    // justify-content: center;
+    padding: 3rem;
+    gap:40px;
+    
+    .guesses{
+        display: flex;
+        flex-flow: column nowrap;
+        gap:40px;
+    }
+}
+
+.hashes{
+display:flex;
+flex-flow: row wrap;
+justify-content: center;
+align-items: center;
+gap: 25px;
+padding-top: 7%;
+
+    .hash__item{
+        border-bottom: 3px solid black;
+        width: 40px;
+    }
+}
+
+
+.incorrect-guesses{
+    display: flex;
+}

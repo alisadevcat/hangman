@@ -6,21 +6,23 @@
     font-weight: 600;
     line-height: 150%;
     text-align: center;
+    padding: 10px 20px;
+    background-color: grey;
+    border-radius: 5px;
+
+    &:hover{
+    background-color: lightgrey;
+    }
 }
-.btn-primary{
-    padding: 20px;
-    background-color: $color-secondary;
-    border-radius: 100px;
-    color: $color-primary;
+.buttons{
+    gap: 7px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
 }
-.btn-modal-types{
-padding: 8px 6px 8px 8px;
+.buttons,
+.guesses{
+    padding: 10px 20px;
 }
 
-.btn-modal-close{
-    padding: 8px 78px;
-    width:100%;
-    border-radius: 100px;
-    background-color: $color-secondary;
-    border:1px solid $color-light-border;
-}
