@@ -29,12 +29,12 @@
   }
 }
 
-.incorrect-guesses {
+.mistakes {
   display: flex;
   h3{
     padding-right: 1rem;
   }
-  .incorrect-guesses__left {
+  .mistakes__left {
     &::after {
       content: " / ";
     }

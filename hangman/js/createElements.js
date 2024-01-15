@@ -1,18 +1,40 @@
 // import handleEvents from './virtualEvents';
-import words from "../words.json";
+import {
+  formatWord,
+  addBodyPartToHangMan,
+  createKeyBoard,
+  generateRandomWord,
+} from "./utils";
 
-let count = 0;
-let correctWord = words[count];
-let inCorrectCount = 0;
-let correctAnswers = 0;
+const words = ["cat", "dog", "parrot"];
+let currentWord = localStorage.getItem("currentWord")
+  ? localStorage.getItem("currentWord")
+  : generateRandomWord(words);
 
-console.log(words);
+const wordObject = formatWord(currentWord);
+
+let mistakes =
+  localStorage.getItem("mistakes") != null
+    ? localStorage.getItem("mistakes")
+    : 0;
+
+let correctAnswers =
+  localStorage.getItem("correctAnswers") != null
+    ? parseInt(localStorage.getItem("correctAnswers"))
+    : 0;
+
+let storedWordArray = localStorage.getItem("storedWordArray")
+  ? JSON.parse(localStorage.getItem("storedWordArray"))
+  : wordObject;
+
+let maxWrong = 6;
+
+const guessedLetters = [];
 
 function createElements() {
   const main = document.createElement("main");
   const container = document.createElement("div");
   container.classList.add("container");
-  container.innerHTML = "Container";
 
   const divFlexContainer = document.createElement("div");
   divFlexContainer.classList.add("row");
@@ -55,7 +77,7 @@ function createElements() {
   gameTitle.innerHTML = "Hangman Game";
 
   divFirstHalf.appendChild(gameTitle);
-  divSecondHalf.appendChild(createGuessTopPart(correctWord));
+  divSecondHalf.appendChild(createGuessTopPart(storedWordArray));
   divSecondHalf.appendChild(createKeyBoard());
 
   main.appendChild(container);
@@ -64,68 +86,54 @@ function createElements() {
   divFlexContainer.appendChild(divSecondHalf);
   document.body.appendChild(main);
 
-  handleEvents(correctWord.word, inCorrectCount);
+  handleEvents();
 }
 
-function createKeyBoard() {
-  const div = document.createElement("div");
-  div.classList.add("buttons");
-
-  const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
-  alphabet.forEach((item) => {
-    const key = document.createElement("div");
-    key.classList.add("btn");
-    key.dataset.key = item;
-    key.innerHTML = item;
-    div.appendChild(key);
-  });
-
-  return div;
-}
-
-function createGuessTopPart({ word, hint: hintSentence }) {
-  const arr = word.split("");
-  console.log(arr);
-
+function createGuessTopPart() {
   const guesses = document.createElement("div");
   guesses.classList.add("guesses");
 
   const hashes = document.createElement("div");
   hashes.classList.add("hashes");
 
-  arr.forEach((item) => {
+  // console.log(currentWord, storedWordArray, mistakes);
+
+  storedWordArray.forEach((item) => {
     let hash = document.createElement("div");
-    let hashUnderline = document.createElement("div");
-    hashUnderline.classList.add("hash__item-underline");
+    let hashDiv = document.createElement("div");
+    hashDiv.classList.add("hash__item-underline");
 
     hash.classList.add("hash__item");
-    hash.classList.add("hide");
-    hash.dataset.letter = `${item}`;
-    hash.innerHTML = item;
-    hashes.appendChild(hash);
-    hashes.appendChild(hashUnderline);
+    if (item.hidden === true) {
+      hash.classList.add("hide");
+    }
+    hash.dataset.letter = `${item.letter}`;
+    hash.innerHTML = item.letter;
+    hashDiv.appendChild(hash);
+    hashes.appendChild(hashDiv);
+    // 
   });
 
   const hint = document.createElement("div");
   hint.classList.add("hint");
 
   const hintDiv = document.createElement("div");
-  hintDiv.innerHTML = `Hint:<b> ${hintSentence} </b>`;
+  hintDiv.innerHTML = `Hint:<b> Pets </b>`;
   hintDiv.classList.add("hint__text");
 
   const incorrectGuesses = document.createElement("div");
-  incorrectGuesses.classList.add("incorrect-guesses");
+  incorrectGuesses.classList.add("mistakes");
 
   const text = document.createElement("h3");
   text.innerHTML = "Incorrect answers:";
 
   const guessesLeft = document.createElement("span");
-  guessesLeft.classList.add("incorrect-guesses__left");
-  guessesLeft.innerHTML = inCorrectCount;
+  guessesLeft.classList.add("mistakes__left");
+  guessesLeft.innerHTML = parseInt(mistakes);
 
   const guessesTotal = document.createElement("span");
-  guessesTotal.classList.add("incorrect-guesses__total");
-  guessesTotal.innerHTML = " 6";
+  guessesTotal.classList.add("mistakes__total");
+  guessesTotal.innerHTML = maxWrong;
 
   hint.appendChild(hintDiv);
 
@@ -142,46 +150,53 @@ function createGuessTopPart({ word, hint: hintSentence }) {
 
 document.addEventListener("DOMContentLoaded", createElements);
 
-function handleEvents(word, inCorrectCount) {
+function handleEvents() {
   const buttons = document.querySelector(".buttons");
   const hashes = document.querySelectorAll(".hash__item");
-  const incorrectCountSpan = document.querySelector(".incorrect-guesses__left");
+  const incorrectCountSpan = document.querySelector(".mistakes__left");
 
-  console.log(inCorrectCount);
+  // console.log(mistakes);
   buttons.addEventListener("click", function (event) {
     const letter = event.target.dataset.key;
-    // let letterIndex = false;
-    // console.log(event.target.dataset.key);
 
-    // if (word.includes(letter)) {
-    //     letterIndex = word.indexOf(letter);
-    // }
-    console.log(correctAnswers);
-    if (correctAnswers <= word.length) {
-      if (word.includes(letter)) {
+    if (!guessedLetters.includes(letter)){
+      guessedLetters.push(letter);
+    }
+
+    if (correctAnswers <= currentWord.length) {
+      if (currentWord.split("").includes(letter)) {
         hashes.forEach((item) => {
-          if (
-            item.dataset.letter === letter &&
-            item.classList.contains("hide")
-          ) {
+          if (item.dataset.letter === letter && item.classList.contains("hide")) {
+            // currentWord[word.word.indexOf(letter)].hidden = false;
+            console.log(storedWordArray);
+            item.innerHTML = letter;
             item.classList.remove("hide");
-            correctAnswers += 1;
+         
+            localStorage.setItem("correctAnswers", correctAnswers + 1);
           }
         });
       } else {
-        if (inCorrectCount <= 6) {
-          inCorrectCount += 1;
-          incorrectCountSpan.innerHTML = inCorrectCount;
-          addBodyPartToHangMan(inCorrectCount);
+        let currentCount = parseInt(mistakes);
+        if (currentCount < maxWrong) {
+          incorrectCountSpan.innerHTML = currentCount + 1;
+          localStorage.setItem("mistakes", currentCount + 1);
+          addBodyPartToHangMan();
         } else {
           alert("Game is lost");
+          localStorage.removeItem("mistakes");
+          localStorage.removeItem("correctAnswers");
+          localStorage.removeItem("storedWordArray");
+          localStorage.setItem("currentWord", generateRandomWord(words));
         }
       }
     } else {
       alert("You're the winner");
-      count += 1;
+      localStorage.removeItem("mistakes");
+      localStorage.removeItem("correctAnswers");
+      localStorage.removeItem("storedWordArray");
+      localStorage.setItem("currentWord", generateRandomWord(words));
     }
   });
 }
 
-function addBodyPartToHangMan(inCorrectCount) { }
+// localStorage.clear();
