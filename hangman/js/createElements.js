@@ -15,7 +15,7 @@ const wordObject = formatWord(currentWord);
 
 let mistakes =
   localStorage.getItem("mistakes") != null
-    ? localStorage.getItem("mistakes")
+    ? parseInt(localStorage.getItem("mistakes"))
     : 0;
 
 let correctAnswers =
@@ -159,27 +159,30 @@ function handleEvents() {
   buttons.addEventListener("click", function (event) {
     const letter = event.target.dataset.key;
 
-    if (!guessedLetters.includes(letter)){
-      guessedLetters.push(letter);
-    }
-
+    // if (!guessedLetters.includes(letter)){
+    //   guessedLetters.push(letter);
+    // }
     if (correctAnswers <= currentWord.length) {
       if (currentWord.split("").includes(letter)) {
         hashes.forEach((item) => {
           if (item.dataset.letter === letter && item.classList.contains("hide")) {
             // currentWord[word.word.indexOf(letter)].hidden = false;
-            console.log(storedWordArray);
             item.innerHTML = letter;
             item.classList.remove("hide");
-         
             localStorage.setItem("correctAnswers", correctAnswers + 1);
+            let arr = [...storedWordArray];
+            arr[currentWord.indexOf(letter)].hidden = false;
+        
+            localStorage.setItem("storedWordArray", JSON.stringify(arr));
+            console.log(storedWordArray);
           }
         });
       } else {
-        let currentCount = parseInt(mistakes);
-        if (currentCount < maxWrong) {
+        let currentCount = mistakes;
+        if (mistakes < maxWrong) {
           incorrectCountSpan.innerHTML = currentCount + 1;
           localStorage.setItem("mistakes", currentCount + 1);
+          console.log(mistakes);
           addBodyPartToHangMan();
         } else {
           alert("Game is lost");
